@@ -1,97 +1,86 @@
-# Remove Store Owner Login Options & Customer-Facing Phone Number
+# Real-Time Image & Product Preview Component in Admin Dashboard
 
-Remove all administrative login shortcuts, store owner prompts, and occurrences of the mobile number `7975614686` from customer-facing screens, while keeping regular login seamlessly functional to unlock the admin dashboard for the verified store owner.
+Upgrade the **Add New Product** page in the Admin Dashboard with a real-time preview component that dynamically displays the selected image file or external URL alongside full live product details (title, brand, MRP, selling price, automatic discount, weight, and stock status) before saving to the database.
 
 ## User Review & Critical Decisions
 
 > [!IMPORTANT]
-> The following decisions were confirmed during the clarification step:
-> - **Admin Access Strategy**: Normal customer login automatically unlocks the admin portal when mobile number `7975614686` is authenticated. No public "Store Owner" buttons or shortcuts are exposed to visitors.
-> - **Customer Support Presentation**: Customer support is presented as "Order Support" with direct WhatsApp messaging, hiding the raw phone number `7975614686` from public text displays.
+> The following decisions were confirmed during the interactive clarification step:
+> - **Preview Position**: Live customer storefront card preview positioned in a responsive sticky column beside the form.
+> - **Preview Contents**: Full live customer card displaying the uploaded/URL image, product title, brand, unit/weight, selling price, MRP strikethrough, auto-calculated discount percentage badge, and in-stock indicator.
 
 ---
 
 ## 1. Overview & Core Concept
 
-- **What It Does**: Sanitizes the customer-facing storefront to present a clean, professional retail shopping experience. All references to administrative control, store owner login buttons, and the private phone number `7975614686` are stripped from public customer views.
-- **Target Audience / Persona**: Kirana store customers browsing groceries, placing orders, and seeking support, alongside the store owner who logs in through the standard login field to manage the store.
-- **Key Value**: Preserves store owner privacy and prevents customer confusion by eliminating admin login prompts and public telephone numbers from the storefront, while retaining automated role-based dashboard access.
+- **What It Does**: Provides the store administrator with an immediate, high-fidelity visual preview of how a grocery item will appear to shoppers on the customer homepage and category aisles before committing changes to the database.
+- **Target Audience / Persona**: Store Owner / Administrator (`7975614686`) adding new grocery staples or updating prices, packaging weights, and product photos.
+- **Key Value**: Eliminates guesswork and formatting errors by providing instant feedback for device photo uploads, external image URLs, price discount math, and availability indicators.
 
 ---
 
 ## 2. User Experience & Visual Design
 
-### Customer Storefront Views
-- **Header Top Strip**: Replaces `Support: 7975614686` with an elegant, non-intrusive `Order Support` action that connects directly to support without printing the raw phone number.
-- **Homepage Hero Value Card**: Replaces the `Helpline: 7975614686` line with `Support: Daily 8 AM – 10 PM · WhatsApp Enabled`.
-- **Empty Catalogue Banner**: Removes the `Store Owner Login (7975614686)` button for guests. Replaces `Customer Helpline & WhatsApp: 7975614686` with `Customer Support: Active on WhatsApp`.
-- **Storefront Footer**: Removes the entire "Store Administrator / 7975614686" column and login button. Replaces it with a customer-centric "Customer Assistance" column highlighting fast delivery guarantees and WhatsApp ordering.
-- **Order Details & Order History**: Updates contact links from `Call Store (7975614686)` to `Contact Store Support`.
-- **Checkout Confirmation Screen**: Changes `Call: 7975614686` to `Order Support: WhatsApp & Helpline`.
+### 2-Column Responsive Layout
+- **Desktop (1024px+)**: A balanced 12-column split layout:
+  - **Left Area (8 columns)**: Comprehensive Add/Edit Product form (Title, Brand, Category, Unit, MRP, Selling Price, Discount, File/URL Image Upload, Expiry Dates, Stock, Status, Description, and large green Save button).
+  - **Right Area (4 columns)**: Sticky desktop sidebar housing the **Real-Time Customer Storefront Preview** card that updates instantaneously on every keystroke or file upload.
+- **Mobile / Tablet (< 1024px)**: Stacked layout with the live preview card cleanly docked above the action buttons or below the image upload field for thumb-friendly inspection.
 
-### Login Modal (`AuthModal`)
-- Removes the `Store Owner / Admin Login (7975614686)` shortcut button.
-- Removes any prefilled mobile numbers or admin banner descriptions (`Authorized store administrator login for 7975614686`).
-- Presents a unified, clean "Sign In / Register" screen for all users.
-- When `7975614686` enters their number and verifies via OTP, the backend securely returns `isAdmin: true` and the app automatically switches or unlocks the Admin Dashboard option in the user menu.
+### Real-Time Preview Component Features
+1. **Dynamic Image Rendering**:
+   - Renders device gallery/camera photo uploads (via `FileReader` data URLs) or external HTTP/HTTPS image links with zero latency.
+   - Elegant image placeholder state with grocery icon when no photo is uploaded yet.
+   - Image format badge (`JPG`, `PNG`, `WebP`) and source indicator (`Local Upload` vs `External URL`).
+2. **Complete Customer Card Simulation**:
+   - **Product Image**: Clean aspect ratio container with object-contain formatting and neutral backing.
+   - **Brand & Category Kicker**: Displays entered Brand and Category.
+   - **Product Title**: Live title text with proper typography and wrapping.
+   - **Weight / Unit**: Displays `1 kg`, `500 g`, `1 litre`, etc.
+   - **Pricing Hierarchy**: Prominent selling price in bold INR (`₹`), original MRP with strikethrough, and emerald discount badge (`X% OFF`).
+   - **Stock & Storefront Status**: Real-time indicators for `In Stock` vs `Out of Stock`, and `Active Online` vs `Inactive (Hidden)`.
+3. **Form Integrity Callouts**:
+   - Quick visual checklist below the preview card indicating whether Title, Image, and Prices meet validation criteria before clicking "ADD PRODUCT".
 
 ---
 
 ## 3. Key Product Decisions & Trade-Offs
 
-- **Decision 1: Silent Admin Recognition on Standard Login**
-  - *Chosen Approach*: The standard login input accepts `7975614686`. On OTP validation, backend authorization checks `mobile === '7975614686'` and marks the session as admin.
-  - *Why*: Eliminates clutter and public exposure of administrative roles while ensuring the store owner can log in effortlessly from any phone or computer.
-  - *Alternative Considered*: Secret URL parameters or hidden tap gestures. Passed over in favor of standard single-door login with backend role assignment.
+- **Decision 1: Full Card Replica vs. Isolated Image Box**
+  - *Chosen Approach*: Full live storefront card preview displaying image together with title, pricing, discount, and unit.
+  - *Why*: Allows the admin to evaluate the complete customer experience—checking that the image contrasts well with the discount badge and title length before saving.
 
-- **Decision 2: Support Privacy & WhatsApp Connectivity**
-  - *Chosen Approach*: Maintain functional WhatsApp chat links via the floating button and header action, but suppress the visual rendering of the raw phone number digits `7975614686`.
-  - *Why*: Allows customers to easily message the store while preventing screen scraping and unwanted cold calls.
+- **Decision 2: Universal Support for Device Uploads & Web URLs**
+  - *Chosen Approach*: Reactive data binding on `imagePreview` and `formImageUrl`.
+  - *Why*: Supports both direct phone camera snapshots (base64 data URL) and curated web URLs with instant fallback error handling if an external image link fails to load.
 
 ---
 
 ## 4. Technical Architecture & System Flow
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                 Customer Storefront Surfaces                │
-│                                                             │
-│  [Navbar]             → Shows "Order Support" (No raw digits)│
-│  [StoreHero]          → Shows "Support: Daily 8 AM - 10 PM" │
-│  [EmptyState]         → No "Store Owner Login" button       │
-│  [Footer]             → Pure customer assistance (No admin) │
-│  [Checkout & Orders]  → "Contact Store Support"             │
-└──────────────────────────────┬──────────────────────────────┘
-                               │
-                               ▼
-┌─────────────────────────────────────────────────────────────┐
-│                 Unified AuthModal (Login)                   │
-│                                                             │
-│  • Clean mobile + OTP input (No admin quick-fill button)    │
-│  • Submits to POST /api/auth/verify-otp                     │
-└──────────────────────────────┬──────────────────────────────┘
-                               │
-                               ▼
-┌─────────────────────────────────────────────────────────────┐
-│                 Backend Server Verification                 │
-│                                                             │
-│  • If mobile === '7975614686' → returns isAdmin: true       │
-│  • Otherwise                  → returns isAdmin: false      │
-└──────────────────────────────┬──────────────────────────────┘
-                               │
-            ┌──────────────────┴──────────────────┐
-            ▼                                     ▼
-     isAdmin: true                         isAdmin: false
-┌───────────────────────┐             ┌───────────────────────┐
-│ Admin Dashboard shown │             │ Regular customer view │
-│ in Navbar & view menu │             │ Standard customer cart│
-└───────────────────────┘             └───────────────────────┘
+┌────────────────────────────────────────────────────────────────────────┐
+│                   Admin Dashboard (ADD_PRODUCT Tab)                    │
+│                                                                        │
+│   ┌───────────────────────────────────┐  ┌───────────────────────────┐ │
+│   │       Product Entry Form          │  │   Real-Time Live Preview  │ │
+│   │                                   │  │                           │ │
+│   │ • Title: [ Aashirvaad Atta     ]  │  │ ┌───────────────────────┐ │ │
+│   │ • Image: [ File / Web URL       ]──┼──┼─▶ Image Rendered Here  │ │ │
+│   │ • MRP:   [ 300 ]                  │  │ │ (Local File or URL)   │ │ │
+│   │ • Price: [ 270 ]                  │  │ └───────────────────────┘ │ │
+│   │ • Auto Discount: 10% OFF          │  │ • Aashirvaad Atta - 1 kg  │ │
+│   │ • Weight: 1 kg                    │  │ • ₹270  ₹300 (10% OFF)    │ │
+│   │ • Stock: 50 | In Stock            │  │ • In Stock (50 Units)     │ │
+│   │                                   │  │ • Active on Storefront    │ │
+│   │ [ ADD PRODUCT / SAVE BUTTON ]     │  │                           │ │
+│   └───────────────────────────────────┘  └───────────────────────────┘ │
+└────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### Verification & Testing Steps
-1. Verify `AuthModal.tsx` contains no store owner quick-fill buttons, pre-fills, or admin text tags.
-2. Verify `App.tsx` has no `Store Owner Login` buttons in the empty state or footer, and no `7975614686` printed in customer views.
-3. Verify `Navbar.tsx` and `StoreHero.tsx` display generic support labels without the digits `7975614686`.
-4. Verify `OrdersView.tsx` and `CheckoutModal.tsx` display generic support contact buttons.
-5. Log in with `7975614686` and verify that `isAdmin: true` is awarded and the Admin Dashboard opens properly.
-6. Run `compile_applet` and `lint_applet` to confirm 0 errors.
+1. Verify device image upload from computer/phone renders immediately in the live card preview.
+2. Verify switching to external URL mode loads and updates the preview card.
+3. Verify changing title, MRP, selling price, weight, or category updates the preview in real time.
+4. Verify invalid/empty image state shows a clean placeholder without broken image icons.
+5. Co-execute `compile_applet` and `lint_applet` together to verify 0 errors.

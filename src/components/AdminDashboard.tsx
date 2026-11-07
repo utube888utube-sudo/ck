@@ -1115,8 +1115,9 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
 
         {/* TAB 3: ADVANCED ADD / EDIT PRODUCT FORM */}
         {activeTab === 'ADD_PRODUCT' && (
-          <div className="p-6 max-w-4xl">
-            <div className="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-2xs space-y-6">
+          <div className="p-4 sm:p-6 max-w-7xl">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+              <div className="lg:col-span-7 xl:col-span-8 bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-2xs space-y-6">
               <div className="flex items-center justify-between pb-4 border-b border-slate-100">
                 <div>
                   <h3 className="text-lg font-bold text-slate-900">
@@ -1484,6 +1485,260 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                   )}
                 </div>
               </form>
+            </div>
+
+            {/* REAL-TIME PREVIEW COLUMN */}
+            <div className="lg:col-span-5 xl:col-span-4 sticky top-6 space-y-4">
+              {/* Header Box */}
+              <div className="bg-white rounded-2xl border border-slate-200 p-4 shadow-2xs">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 rounded-xl bg-emerald-50 text-[#168A45] flex items-center justify-center">
+                      <Eye className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-bold text-slate-900 leading-tight">Live Storefront Preview</h4>
+                      <p className="text-[11px] text-slate-500">Real-time simulation on customer devices</p>
+                    </div>
+                  </div>
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">
+                    <span className="w-2 h-2 rounded-full bg-emerald-600 animate-pulse"></span>
+                    Live Card
+                  </span>
+                </div>
+              </div>
+
+              {/* Simulated Customer Product Card */}
+              <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden transition-all hover:shadow-md">
+                {/* Image Area with Badges */}
+                <div className="relative h-56 sm:h-64 bg-gradient-to-b from-slate-50 to-slate-100 flex items-center justify-center p-4 overflow-hidden border-b border-slate-100">
+                  {/* Floating Badges */}
+                  <div className="absolute top-3 left-3 right-3 flex items-center justify-between z-10 pointer-events-none">
+                    {formDiscount > 0 ? (
+                      <span className="bg-amber-500 text-white text-[11px] font-black px-2.5 py-0.5 rounded-lg shadow-sm tracking-wide">
+                        {formDiscount}% OFF
+                      </span>
+                    ) : (
+                      <span />
+                    )}
+
+                    {formStatus === 'ACTIVE' ? (
+                      <span className="bg-emerald-500/95 backdrop-blur-xs text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-xs flex items-center gap-1">
+                        <span className="w-1.5 h-1.5 rounded-full bg-white animate-ping"></span>
+                        Active Online
+                      </span>
+                    ) : (
+                      <span className="bg-slate-700/90 backdrop-blur-xs text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-xs flex items-center gap-1">
+                        <EyeOff className="w-3 h-3" />
+                        Hidden (Draft)
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Product Image or Empty State */}
+                  {imagePreview || formImageUrl ? (
+                    <div className="relative w-full h-full flex items-center justify-center">
+                      <img
+                        src={imagePreview || formImageUrl}
+                        alt={formTitle || 'Product Preview'}
+                        className="w-full h-full object-contain drop-shadow-xs transition-transform duration-300"
+                        onError={(e) => {
+                          (e.target as HTMLImageElement).src =
+                            'https://images.unsplash.com/photo-1542838132-92c53300491e?w=500&auto=format&fit=crop&q=60';
+                        }}
+                      />
+                      {/* Image Source Badge */}
+                      <div className="absolute bottom-1 left-1 bg-black/60 backdrop-blur-xs text-white text-[9px] font-medium px-2 py-0.5 rounded-md flex items-center gap-1">
+                        {imageUploadMode === 'FILE' && imagePreview?.startsWith('data:') ? (
+                          <>
+                            <Upload className="w-2.5 h-2.5 text-emerald-400" />
+                            <span>Gallery File Upload</span>
+                          </>
+                        ) : (
+                          <>
+                            <ExternalLink className="w-2.5 h-2.5 text-blue-400" />
+                            <span>External Image URL</span>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="text-center p-6 flex flex-col items-center justify-center">
+                      <div className="w-14 h-14 rounded-2xl bg-white border border-dashed border-slate-300 flex items-center justify-center text-slate-400 shadow-2xs mb-2">
+                        <ImageIcon className="w-7 h-7 stroke-[1.5]" />
+                      </div>
+                      <span className="text-xs font-bold text-slate-700">No Image Selected</span>
+                      <p className="text-[11px] text-slate-400 mt-0.5 max-w-[200px]">
+                        Select a file from your device or paste a web URL on the left to preview instantly.
+                      </p>
+                    </div>
+                  )}
+
+                  {/* Out of Stock Overlay */}
+                  {!formInStock && (
+                    <div className="absolute inset-0 bg-slate-900/65 backdrop-blur-[1px] flex items-center justify-center z-20">
+                      <span className="bg-rose-600 text-white font-extrabold text-xs px-3.5 py-1.5 rounded-full uppercase tracking-wider shadow-lg border border-rose-400">
+                        Out of Stock
+                      </span>
+                    </div>
+                  )}
+                </div>
+
+                {/* Card Details */}
+                <div className="p-4 space-y-3">
+                  {/* Brand & Category */}
+                  <div className="flex items-center justify-between text-xs gap-2">
+                    <span className="text-[#168A45] font-black uppercase tracking-wider text-[11px] truncate">
+                      {formBrand.trim() || 'Brand Name'}
+                    </span>
+                    <span className="bg-slate-100 px-2 py-0.5 rounded-md text-[10px] font-semibold text-slate-600 shrink-0">
+                      {formCategory}
+                    </span>
+                  </div>
+
+                  {/* Title */}
+                  <div>
+                    <h4 className="font-bold text-slate-900 text-sm leading-snug line-clamp-2 min-h-[2.5rem]">
+                      {formTitle.trim() || 'Enter product title to preview...'}
+                    </h4>
+                    <p className="text-xs text-slate-500 mt-1 flex items-center gap-2">
+                      <span>
+                        Net Qty: <strong className="text-slate-800 font-semibold">{formUnit || '1 Unit'}</strong>
+                      </span>
+                      {formStockCount && (
+                        <>
+                          <span className="text-slate-300">•</span>
+                          <span className="text-slate-500">Stock: {formStockCount}</span>
+                        </>
+                      )}
+                    </p>
+                  </div>
+
+                  {/* Mfg / Exp Dates banner if provided */}
+                  {(formMfgDate || formExpDate) && (
+                    <div className="bg-slate-50 border border-slate-100 rounded-xl p-2 text-[10px] text-slate-600 flex items-center justify-between">
+                      <span className="flex items-center gap-1">
+                        <Calendar className="w-3 h-3 text-slate-400" />
+                        Mfg: <strong>{formMfgDate || 'N/A'}</strong>
+                      </span>
+                      <span>
+                        Exp: <strong className="text-amber-700">{formExpDate || 'N/A'}</strong>
+                      </span>
+                    </div>
+                  )}
+
+                  {/* Pricing Row */}
+                  <div className="pt-2 border-t border-slate-100 flex items-baseline justify-between">
+                    <div>
+                      <div className="flex items-baseline gap-2">
+                        <span className="text-xl font-black text-slate-950">
+                          ₹{formSellingPrice ? Number(formSellingPrice).toLocaleString('en-IN') : '0'}
+                        </span>
+                        {formMrp && Number(formMrp) > Number(formSellingPrice || 0) && (
+                          <span className="text-xs text-slate-400 line-through">
+                            ₹{Number(formMrp).toLocaleString('en-IN')}
+                          </span>
+                        )}
+                      </div>
+                      {formMrp && formSellingPrice && Number(formMrp) > Number(formSellingPrice) && (
+                        <p className="text-[10px] font-bold text-emerald-700 mt-0.5">
+                          Customer saves ₹{(Number(formMrp) - Number(formSellingPrice)).toLocaleString('en-IN')}
+                        </p>
+                      )}
+                    </div>
+
+                    {/* In-Stock Pill */}
+                    <span
+                      className={`text-[10px] font-bold px-2 py-0.5 rounded-md ${
+                        formInStock ? 'bg-emerald-50 text-emerald-700' : 'bg-rose-50 text-rose-700'
+                      }`}
+                    >
+                      {formInStock ? 'In Stock' : 'Out of Stock'}
+                    </span>
+                  </div>
+
+                  {/* Simulated Customer Cart Button */}
+                  <div className="pt-1">
+                    <button
+                      type="button"
+                      disabled
+                      className="w-full py-2.5 bg-[#168A45]/10 text-[#168A45] font-bold text-xs rounded-xl flex items-center justify-center gap-1.5 cursor-not-allowed border border-[#168A45]/20 select-none"
+                    >
+                      <ShoppingBag className="w-4 h-4" />
+                      <span>Add to Basket</span>
+                    </button>
+                    <p className="text-[10px] text-center text-slate-400 mt-1">
+                      (Interactive simulation of customer catalog item)
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Pre-Flight Quality Inspection Box */}
+              <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 space-y-2.5 text-xs">
+                <div className="flex items-center justify-between pb-2 border-b border-slate-200">
+                  <span className="font-bold text-slate-800 flex items-center gap-1.5">
+                    <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+                    Pre-Flight Inspection
+                  </span>
+                  <span className="text-[10px] text-slate-500 font-medium">Auto-verifies inputs</span>
+                </div>
+
+                <div className="space-y-1.5 text-[11px]">
+                  {/* Title check */}
+                  <div className="flex items-center justify-between">
+                    <span className="text-slate-600">Product Title:</span>
+                    {formTitle.trim().length >= 3 ? (
+                      <span className="text-emerald-700 font-semibold flex items-center gap-1">
+                        <CheckCircle2 className="w-3 h-3 text-emerald-600" /> Ready
+                      </span>
+                    ) : (
+                      <span className="text-amber-600 font-semibold flex items-center gap-1">
+                        <AlertCircle className="w-3 h-3" /> Title required
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Photo check */}
+                  <div className="flex items-center justify-between">
+                    <span className="text-slate-600">Product Image:</span>
+                    {imagePreview || formImageUrl ? (
+                      <span className="text-emerald-700 font-semibold flex items-center gap-1">
+                        <CheckCircle2 className="w-3 h-3 text-emerald-600" /> Photo Loaded
+                      </span>
+                    ) : (
+                      <span className="text-amber-600 font-semibold flex items-center gap-1">
+                        <AlertCircle className="w-3 h-3" /> No photo set
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Pricing check */}
+                  <div className="flex items-center justify-between">
+                    <span className="text-slate-600">Pricing & Discount:</span>
+                    {Number(formSellingPrice) > 0 && Number(formMrp) >= Number(formSellingPrice) ? (
+                      <span className="text-emerald-700 font-semibold flex items-center gap-1">
+                        <CheckCircle2 className="w-3 h-3 text-emerald-600" /> Valid ({formDiscount}% Off)
+                      </span>
+                    ) : Number(formSellingPrice) > 0 && Number(formMrp) < Number(formSellingPrice) ? (
+                      <span className="text-rose-600 font-semibold flex items-center gap-1">
+                        <AlertCircle className="w-3 h-3" /> MRP is less than price
+                      </span>
+                    ) : (
+                      <span className="text-slate-500 font-medium">Enter price & MRP</span>
+                    )}
+                  </div>
+
+                  {/* Status check */}
+                  <div className="flex items-center justify-between">
+                    <span className="text-slate-600">Catalog Visibility:</span>
+                    <span className="font-semibold text-slate-800">
+                      {formStatus === 'ACTIVE' ? 'Will publish immediately' : 'Saved as hidden draft'}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
             </div>
           </div>
         )}
