@@ -1,0 +1,6 @@
+{
+  "summary":  "Implementation plan for removing store owner login options from the customer dashboard and login page, and removing the phone number 7975614686 from all customer-facing surfaces while preserving seamless admin authentication on normal login.",
+  "updatedAt":  "2026-11-07T05:59:01.462354374Z",
+  "requestFeedback":  true,
+  "userFacing":  true
+}

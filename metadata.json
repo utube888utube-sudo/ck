@@ -1,0 +1,10 @@
+{
+  "name": "Chodeshwari Kirana Store - Online Grocery",
+  "description": "Online grocery shopping store for Chodeshwari Kirana Store with 50 products, mobile OTP login, live GPS delivery mapping, Cash on Delivery, PhonePe UPI, and owner admin dashboard.",
+  "requestFramePermissions": [
+    "geolocation"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

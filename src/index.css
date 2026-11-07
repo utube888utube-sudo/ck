@@ -1,0 +1,34 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --color-primary: #168a45;
+    --color-secondary: #075b30;
+    --color-bg: #f8faf8;
+    --color-accent: #ffc83d;
+    --color-text: #222222;
+    --font-sans: 'Poppins', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    background-color: var(--color-bg);
+    color: var(--color-text);
+  }
+}
+
+/* Custom scrollbar hiding */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Leaflet map fix inside flex containers */
+.leaflet-container {
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+}
