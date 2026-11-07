@@ -1,86 +1,80 @@
-# Real-Time Image & Product Preview Component in Admin Dashboard
+# Reposition Basket Between Search Bar and Login Button in Top Navigation
 
-Upgrade the **Add New Product** page in the Admin Dashboard with a real-time preview component that dynamically displays the selected image file or external URL alongside full live product details (title, brand, MRP, selling price, automatic discount, weight, and stock status) before saving to the database.
+Relocate the shopping basket button in the top navigation bar so it sits directly between the centered instant search bar and the customer login button, styled as a minimal, high-contrast icon button with an active item count badge.
 
 ## User Review & Critical Decisions
 
 > [!IMPORTANT]
 > The following decisions were confirmed during the interactive clarification step:
-> - **Preview Position**: Live customer storefront card preview positioned in a responsive sticky column beside the form.
-> - **Preview Contents**: Full live customer card displaying the uploaded/URL image, product title, brand, unit/weight, selling price, MRP strikethrough, auto-calculated discount percentage badge, and in-stock indicator.
+> - **Position**: Positioned between the centered search bar and the customer Login button.
+> - **Style & Label**: Minimal icon-only basket button with live numeric item count badge (no text label), keeping the navigation bar clean, balanced, and uncluttered.
 
 ---
 
 ## 1. Overview & Core Concept
 
-- **What It Does**: Provides the store administrator with an immediate, high-fidelity visual preview of how a grocery item will appear to shoppers on the customer homepage and category aisles before committing changes to the database.
-- **Target Audience / Persona**: Store Owner / Administrator (`7975614686`) adding new grocery staples or updating prices, packaging weights, and product photos.
-- **Key Value**: Eliminates guesswork and formatting errors by providing instant feedback for device photo uploads, external image URLs, price discount math, and availability indicators.
+- **What It Does**: Moves the shopping basket trigger from the far-right edge of the navigation header into the space between the search bar and the customer login button, adopting a sleek icon-only visual presentation with a live item counter.
+- **Target Audience / Persona**: Kirana store customers browsing and ordering groceries who need quick, effortless access to their basket while keeping login and account actions clearly accessible on the right.
+- **Key Value**: Streamlines the header visual hierarchy by grouping product discovery (Search), cart accumulation (Basket), and account access (Login) in an intuitive left-to-right progression.
 
 ---
 
 ## 2. User Experience & Visual Design
 
-### 2-Column Responsive Layout
-- **Desktop (1024px+)**: A balanced 12-column split layout:
-  - **Left Area (8 columns)**: Comprehensive Add/Edit Product form (Title, Brand, Category, Unit, MRP, Selling Price, Discount, File/URL Image Upload, Expiry Dates, Stock, Status, Description, and large green Save button).
-  - **Right Area (4 columns)**: Sticky desktop sidebar housing the **Real-Time Customer Storefront Preview** card that updates instantaneously on every keystroke or file upload.
-- **Mobile / Tablet (< 1024px)**: Stacked layout with the live preview card cleanly docked above the action buttons or below the image upload field for thumb-friendly inspection.
+### Header Spatial Flow (Left-to-Right)
+1. **Zone 1 (Brand & Delivery)**:
+   - Chodeshwari Kirana Store wordmark and logo badge.
+   - Delivery destination pill ("Delivery in 15–25 Mins · Pinpoint on Map").
+2. **Zone 2 (Search)**:
+   - Centered search input for fast product discovery.
+3. **Zone 3 (Actions & Access)**:
+   - **Basket Button (New Position)**: Placed immediately after the search bar and before the login button. Styled as a circular or rounded square tactile icon button (`w-9 h-9` or `px-2.5 py-2`) featuring the `ShoppingBag` icon and a gold count badge (`#FFC83D`) with smooth active scale micro-interaction (`active:scale-95`).
+   - **Login / Account Button**: Sits to the right of the basket button. Shows "Login" with `User` icon for visitors, or customer avatar + initials for logged-in users.
+   - **Admin Portal Pill (Conditional)**: If logged in as the verified store administrator (`7975614686`), a quiet emerald "Admin" badge sits neatly alongside.
 
-### Real-Time Preview Component Features
-1. **Dynamic Image Rendering**:
-   - Renders device gallery/camera photo uploads (via `FileReader` data URLs) or external HTTP/HTTPS image links with zero latency.
-   - Elegant image placeholder state with grocery icon when no photo is uploaded yet.
-   - Image format badge (`JPG`, `PNG`, `WebP`) and source indicator (`Local Upload` vs `External URL`).
-2. **Complete Customer Card Simulation**:
-   - **Product Image**: Clean aspect ratio container with object-contain formatting and neutral backing.
-   - **Brand & Category Kicker**: Displays entered Brand and Category.
-   - **Product Title**: Live title text with proper typography and wrapping.
-   - **Weight / Unit**: Displays `1 kg`, `500 g`, `1 litre`, etc.
-   - **Pricing Hierarchy**: Prominent selling price in bold INR (`₹`), original MRP with strikethrough, and emerald discount badge (`X% OFF`).
-   - **Stock & Storefront Status**: Real-time indicators for `In Stock` vs `Out of Stock`, and `Active Online` vs `Inactive (Hidden)`.
-3. **Form Integrity Callouts**:
-   - Quick visual checklist below the preview card indicating whether Title, Image, and Prices meet validation criteria before clicking "ADD PRODUCT".
+### Visual Polish & Accessibility
+- Clean 40px touch target on mobile and desktop.
+- Subtle background hover effect (`bg-emerald-50 hover:bg-emerald-100 text-[#168A45]` or solid `#168A45` with white icon).
+- Numeric badge uses tabular numerals (`tabular-nums font-mono font-bold`) so the badge geometry remains stable as items are added or removed.
+- Screen reader accessibility preserved with `aria-label="View Shopping Basket"`.
 
 ---
 
 ## 3. Key Product Decisions & Trade-Offs
 
-- **Decision 1: Full Card Replica vs. Isolated Image Box**
-  - *Chosen Approach*: Full live storefront card preview displaying image together with title, pricing, discount, and unit.
-  - *Why*: Allows the admin to evaluate the complete customer experience—checking that the image contrasts well with the discount badge and title length before saving.
-
-- **Decision 2: Universal Support for Device Uploads & Web URLs**
-  - *Chosen Approach*: Reactive data binding on `imagePreview` and `formImageUrl`.
-  - *Why*: Supports both direct phone camera snapshots (base64 data URL) and curated web URLs with instant fallback error handling if an external image link fails to load.
+- **Decision 1: Relocate Existing Cart vs Duplicate Basket Button**
+  - *Chosen Approach*: Relocate the single authoritative basket button directly between the search bar and the login button, replacing the old far-right button.
+  - *Why*: Eliminates visual redundancy, avoids duplicate click targets in the header, and directly satisfies the user's layout request.
+  
+- **Decision 2: Minimal Icon-Only Presentation**
+  - *Chosen Approach*: Icon-only (`ShoppingBag`) with floating numeric pill badge.
+  - *Why*: User explicitly selected this style; saves horizontal space in the header on medium and small screens, preventing search bar compression.
 
 ---
 
 ## 4. Technical Architecture & System Flow
 
 ```
-┌────────────────────────────────────────────────────────────────────────┐
-│                   Admin Dashboard (ADD_PRODUCT Tab)                    │
-│                                                                        │
-│   ┌───────────────────────────────────┐  ┌───────────────────────────┐ │
-│   │       Product Entry Form          │  │   Real-Time Live Preview  │ │
-│   │                                   │  │                           │ │
-│   │ • Title: [ Aashirvaad Atta     ]  │  │ ┌───────────────────────┐ │ │
-│   │ • Image: [ File / Web URL       ]──┼──┼─▶ Image Rendered Here  │ │ │
-│   │ • MRP:   [ 300 ]                  │  │ │ (Local File or URL)   │ │ │
-│   │ • Price: [ 270 ]                  │  │ └───────────────────────┘ │ │
-│   │ • Auto Discount: 10% OFF          │  │ • Aashirvaad Atta - 1 kg  │ │
-│   │ • Weight: 1 kg                    │  │ • ₹270  ₹300 (10% OFF)    │ │
-│   │ • Stock: 50 | In Stock            │  │ • In Stock (50 Units)     │ │
-│   │                                   │  │ • Active on Storefront    │ │
-│   │ [ ADD PRODUCT / SAVE BUTTON ]     │  │                           │ │
-│   └───────────────────────────────────┘  └───────────────────────────┘ │
-└────────────────────────────────────────────────────────────────────────┘
+┌────────────────────────────────────────────────────────────────────────────────────────┐
+│                                   Top Navigation Bar                                   │
+│                                                                                        │
+│  [CK Store Logo]   [Deliver: 15-25m]    [Search Groceries...]   [🛒 Basket]   [👤 Login] │
+│      (Zone 1)           (Zone 1)              (Zone 2)            (Zone 3)     (Zone 3) │
+│                                                                      │                  │
+└──────────────────────────────────────────────────────────────────────┼─────────────────┘
+                                                                       ▼
+                                                          Opens Sliding Cart Drawer
+                                                          (Cart items, quantities,
+                                                           bill total & checkout CTA)
 ```
 
-### Verification & Testing Steps
-1. Verify device image upload from computer/phone renders immediately in the live card preview.
-2. Verify switching to external URL mode loads and updates the preview card.
-3. Verify changing title, MRP, selling price, weight, or category updates the preview in real time.
-4. Verify invalid/empty image state shows a clean placeholder without broken image icons.
-5. Co-execute `compile_applet` and `lint_applet` together to verify 0 errors.
+### Affected Components & Verification Steps
+1. **Update `src/components/Navbar.tsx`**:
+   - Reorder elements inside the actions container: place the basket button before the login button.
+   - Style the button as a minimal icon button with a badge (`<ShoppingBag className="w-4 h-4" />` with badge overlay).
+   - Ensure clean responsive behavior across desktop and mobile screens.
+2. **Verification & Quality Checks**:
+   - Verify clicking the basket opens the CartDrawer.
+   - Verify adding items from product cards updates the badge count in real time.
+   - Verify the login button remains fully functional and opens `AuthModal`.
+   - Run `compile_applet` and `lint_applet` together to verify 0 errors.

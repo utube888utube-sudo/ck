@@ -47,38 +47,38 @@ export const Navbar: React.FC<NavbarProps> = ({
   return (
     <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-xs">
       {/* Top Quick-Delivery & Helpline Strip */}
-      <div className="bg-[#075B30] text-white text-[11px] px-4 py-1.5 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <span className="flex items-center gap-1.5 font-semibold text-[#FFC83D]">
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>{announcement}</span>
+      <div className="bg-[#075B30] text-white text-[10px] sm:text-[11px] px-3 sm:px-4 py-1 flex items-center justify-between gap-2 overflow-hidden">
+        <div className="flex items-center gap-2 min-w-0 truncate">
+          <span className="flex items-center gap-1.5 font-semibold text-[#FFC83D] truncate">
+            <Sparkles className="w-3 h-3 shrink-0" />
+            <span className="truncate">{announcement}</span>
           </span>
           <span className="hidden md:inline text-emerald-200">·</span>
-          <span className="hidden md:inline text-emerald-100">
-            Free Delivery on Orders Over ₹{freeThreshold}
+          <span className="hidden md:inline text-emerald-100 shrink-0">
+            Free Delivery over ₹{freeThreshold}
           </span>
         </div>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3 shrink-0 text-[10px] sm:text-[11px]">
           <a
             href={`https://wa.me/91${supportPhone.replace(/\D/g, '')}?text=${encodeURIComponent(`Hi ${storeName}, I need assistance with my grocery order.`)}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-1.5 text-emerald-100 hover:text-white transition-colors"
+            className="flex items-center gap-1 text-emerald-100 hover:text-white transition-colors"
             title="Chat with Customer Support on WhatsApp"
           >
-            <Phone className="w-3 h-3 text-[#FFC83D]" />
-            <span>Order Support (WhatsApp)</span>
+            <Phone className="w-2.5 h-2.5 text-[#FFC83D]" />
+            <span>Order Support</span>
           </a>
-          <span className="text-emerald-700">|</span>
+          <span className="text-emerald-700 hidden sm:inline">|</span>
           <span className="text-emerald-200 hidden sm:inline">
-            PhonePe UPI: <strong className="text-white font-mono">{phonepeNumber}</strong>
+            PhonePe: <strong className="text-white font-mono">{phonepeNumber}</strong>
           </span>
         </div>
       </div>
 
       {/* Main 3-Zone Navigation Header */}
-      <div className="max-w-7xl mx-auto px-4 py-2.5 sm:py-3 flex items-center justify-between gap-3 sm:gap-6">
+      <div className="max-w-7xl mx-auto px-4 py-2 sm:py-2.5 flex items-center justify-between gap-3 sm:gap-6">
         {/* Zone 1: Store Wordmark & Delivery Pin */}
         <div className="flex items-center gap-4 sm:gap-6 shrink-0">
           <button

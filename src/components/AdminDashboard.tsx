@@ -492,27 +492,27 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
       >
         <div>
           {/* Sidebar Top Header */}
-          <div className="p-4 border-b border-slate-800 flex items-center justify-between">
+          <div className="px-3 py-2 border-b border-slate-800 flex items-center justify-between min-h-[46px]">
             {!sidebarCollapsed && (
-              <div className="flex items-center gap-2.5 overflow-hidden">
-                <div className="w-8 h-8 rounded-xl bg-[#168A45] flex items-center justify-center font-bold text-white text-xs">
+              <div className="flex items-center gap-2 overflow-hidden">
+                <div className="w-6 h-6 rounded-lg bg-[#168A45] flex items-center justify-center font-bold text-white text-[10px]">
                   CK
                 </div>
                 <div className="truncate">
-                  <span className="font-bold text-xs uppercase tracking-wider text-emerald-400 block">
+                  <span className="font-bold text-[11px] uppercase tracking-wider text-emerald-400 block leading-tight">
                     Admin Portal
                   </span>
-                  <span className="text-[11px] text-slate-400 truncate block">
-                    +91 7975614686
+                  <span className="text-[10px] text-slate-400 truncate block leading-tight">
+                    Store Manager
                   </span>
                 </div>
               </div>
             )}
             <button
               onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-              className="p-1.5 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800 transition-colors cursor-pointer"
+              className="p-1 text-slate-400 hover:text-white rounded-md hover:bg-slate-800 transition-colors cursor-pointer"
             >
-              {sidebarCollapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
+              {sidebarCollapsed ? <ChevronRight className="w-3.5 h-3.5" /> : <ChevronLeft className="w-3.5 h-3.5" />}
             </button>
           </div>
 
@@ -571,30 +571,31 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
 
       {/* 2. Main Admin Viewport */}
       <div className="flex-1 flex flex-col min-w-0 overflow-y-auto">
-        <header className="bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between gap-4">
-          <div>
-            <h1 className="text-xl font-bold text-slate-900">
+        <header className="bg-white border-b border-slate-200 px-4 sm:px-6 py-2 sm:py-2.5 min-h-[46px] flex items-center justify-between gap-3 sticky top-0 z-20 shadow-2xs">
+          <div className="flex items-center gap-2.5 min-w-0">
+            <h1 className="text-sm sm:text-base font-bold text-slate-900 leading-none truncate">
               {sidebarItems.find((i) => i.id === activeTab)?.label}
             </h1>
-            <p className="text-xs text-slate-500">
-              Merchant Control Panel · Verified Admin: <strong>7975614686</strong>
+            <span className="hidden sm:inline text-slate-300">·</span>
+            <p className="text-[11px] text-slate-500 hidden sm:inline leading-none truncate">
+              Merchant Control Panel
             </p>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 shrink-0">
             <button
               onClick={loadData}
-              className="p-2 text-slate-600 hover:text-[#168A45] bg-slate-100 rounded-xl transition-colors cursor-pointer"
+              className="p-1.5 text-slate-600 hover:text-[#168A45] bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors cursor-pointer"
               title="Refresh Data"
             >
-              <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+              <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
             </button>
             <button
               onClick={openAddProductTab}
-              className="px-4 py-2 bg-[#168A45] hover:bg-[#075B30] text-white text-xs font-bold rounded-xl shadow-xs transition-colors flex items-center gap-1.5 cursor-pointer"
+              className="px-3 py-1.5 bg-[#168A45] hover:bg-[#075B30] text-white text-xs font-bold rounded-lg shadow-xs transition-colors flex items-center gap-1.5 cursor-pointer"
             >
-              <PlusCircle className="w-4 h-4" />
-              <span>Add New Product</span>
+              <PlusCircle className="w-3.5 h-3.5" />
+              <span>Add Product</span>
             </button>
           </div>
         </header>
